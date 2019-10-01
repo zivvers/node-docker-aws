@@ -1,0 +1,37 @@
+# This file is only used to set up local development. When Docker images are built for production,
+# the Dockerfile is solely used.
+version: "3.7"
+services:
+  # db is a service which sets up a local database used for testing purposes.
+  # For production, Terraform points the Node server to speak with RDS via environment variables.
+  db:
+    image: charliemcgrady-db
+    build:
+      context: './db'
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: charliemcgrady
+    ports:
+      - '5432:5432'
+  node-server:
+    image: charliemcgrady-node-server
+    build:
+      context: './app'
+    # Sleep to wait for DB to accept connections, then install app, run migrations, and start server
+    command: sh -c "sleep 10 && echo 'Installing and starting node server' && npm install && npm run build && npm run init-db && npm run start"
+    volumes:
+      # Mount ./app as a volume to enable hot reloading of the app during development.
+      # The process is as follows:
+      #   - The 'command' attribute define above executes `npm run start` (defined in package.json).
+      #     This command starts nodemon, which will restart the server if files in ./app/dist change
+      #   - `npm run dev` starts the typescript compiler. Any changes are placed in ./app/dist,
+      #     and nodemon restarts the server
+      - ./app:/usr/app
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=postgres
+    depends_on:
+      - db
+    ports:
+      - '4000:4000'

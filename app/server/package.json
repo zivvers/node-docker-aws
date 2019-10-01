@@ -1,0 +1,32 @@
+{
+  "name": "node-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/uuid": "^3.4.5",
+    "knex": "^0.19.4",
+    "koa": "^2.8.2",
+    "koa-router": "^7.4.0",
+    "objection": "^1.6.11",
+    "pg": "^7.12.1",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.50",
+    "@types/koa-router": "^7.0.42",
+    "nodemon": "^1.19.3",
+    "parcel-bundler": "^1.12.4",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w --preserveWatchOutput",
+    "clean": "rm -rf ./dist && rm -rf ./node_modules",
+    "start": "nodemon ./dist/index.js",
+    "init-db": "npm run migrate-db && npm run seed-db",
+    "migrate-db": "./node_modules/knex/bin/cli.js --knexfile ./dist/config/knexfile.js migrate:latest",
+    "seed-db": "./node_modules/knex/bin/cli.js --knexfile ./dist/config/knexfile.js seed:run"
+  }
+}
