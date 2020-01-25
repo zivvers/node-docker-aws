@@ -5,9 +5,10 @@
 # -------------------------------------------------------------
 
 # Bring down any running containers and reset the Docker state
-docker-compose down
-docker rm charliemcgrady-db charliemcgrady-node-server
-docker-compose rm -v
+
+#docker-compose down
+#docker rm charliemcgrady-db charliemcgrady-node-server
+#docker-compose rm -v
 
 # Bring everything back up
 docker-compose up -d
